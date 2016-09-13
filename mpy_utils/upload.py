@@ -55,7 +55,7 @@ class Comms(object):
 
 def main():
     args = parser.parse_args()
-    comms = Comms(args, interrupt=args.main or args.no_interrupt)
+    comms = Comms(args, interrupt=args.main or not args.no_interrupt)
 
     files = [(fh.name, fh) for fh in args.files]
     if args.main:
