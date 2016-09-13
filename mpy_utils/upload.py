@@ -11,10 +11,10 @@ parser.add_argument(
 parser.add_argument(
     '--baud', default=115200, type=int, help='port speed in baud')
 parser.add_argument(
-    '--delay', default=100.0, type=float, help='delay between lines (ms)')
+    '--delay', default=80.0, type=float, help='delay between lines (ms)')
 parser.add_argument(
-    '--interrupt', action='store_true',
-    help='send soft interrupt (control-C) before upload')
+    '--no-interrupt', action='store_false', default=True,
+    help="don't send soft interrupt (control-C) before upload")
 parser.add_argument(
     '--reset', action='store_true',
     help='send soft reset (control-D) after upload')
@@ -30,7 +30,7 @@ class Comms(object):
     def __init__(self, args, interrupt=None):
         self.args = args
         if interrupt is None:
-            self.interrupt = args.interrupt
+            self.interrupt = not args.no_interrupt
         else:
             self.interrupt = interrupt
 
@@ -55,7 +55,7 @@ class Comms(object):
 
 def main():
     args = parser.parse_args()
-    comms = Comms(args, interrupt=args.main or args.interrupt)
+    comms = Comms(args, interrupt=args.main or args.no_interrupt)
 
     files = [(fh.name, fh) for fh in args.files]
     if args.main:
